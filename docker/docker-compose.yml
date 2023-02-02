@@ -1,0 +1,64 @@
+version: '3.7'
+
+networks:
+  ddd_uof:
+
+services:
+  mysql:
+    image: mysql/mysql-server:8.0.26
+    container_name: ddd_uof_mysql
+    ports:
+      - "${MYSQL_PORT}:3306"
+    volumes:
+      - mysql:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    networks:
+      - ddd_uof
+  nginx:
+    container_name: ddd_uof_nginx
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+      args:
+        GID: ${GID}
+        UID: ${UID}
+    ports:
+      - "${NGINX_PORT}:80"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/logs:/var/log/nginx/
+    environment:
+      TZ: ${WORKSPACE_TIMEZONE}
+    depends_on:
+      - mysql
+    networks:
+      - ddd_uof
+  php-fpm-8.1:
+    user: "${UID}:${GID}"
+    build:
+      context: php-fpm
+      dockerfile: Dockerfile
+      args:
+        GID: ${GID}
+        UID: ${UID}
+    environment:
+      USER_ID: ${UID}
+      GROUP_ID: ${GID}
+      PHP_IDE_CONFIG: "serverName=my_app"
+    container_name: php-fpm-8.1
+    volumes:
+      - ./.ssh:/home/www/.ssh:delegated
+      - ../:/var/www
+    ports:
+      - "${PHP_FPM_PORT}:9000"
+    depends_on:
+      - nginx
+      - mysql
+    networks:
+      - ddd_uof
+volumes:
+  mysql:

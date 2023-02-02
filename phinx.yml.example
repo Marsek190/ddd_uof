@@ -1,0 +1,13 @@
+paths:
+  migrations: ./database/migrations
+
+environments:
+  default_migration_table: migrations
+  default_database:
+  development:
+    adapter:
+    host:
+    name:
+    user:
+    pass:
+    port:
