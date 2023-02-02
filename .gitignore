@@ -1,4 +1,5 @@
-./vendor
-./.env
-./docker/.env
-./phinx.yml
+vendor
+.env
+docker/.env
+phinx.yml
+.idea
