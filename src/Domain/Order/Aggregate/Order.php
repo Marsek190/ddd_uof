@@ -4,6 +4,7 @@ namespace App\Domain\Order\Aggregate;
 
 use App\Domain\AggregateRoot;
 use App\Domain\Order\ValueObject\OrderStatus;
+use App\Domain\Product\Aggregate\Product;
 use App\Domain\User\Aggregate\User;
 use Illuminate\Support\Collection;
 use Ramsey\Uuid\Uuid;
@@ -38,6 +39,16 @@ class Order extends AggregateRoot
     }
 
     public function cancel(): void
+    {
+
+    }
+
+    public function addProduct(Product $product): void
+    {
+
+    }
+
+    public function addItem(OrderItem $item): void
     {
 
     }

@@ -40,6 +40,20 @@ class User extends AggregateRoot
         $this->loyalty = $loyalty;
     }
 
+    public function setCart(Cart $cart): void
+    {
+        $this->cart = $cart;
+    }
+
+    /**
+     * @param Collection<Order> $orders
+     * @return void
+     */
+    public function setOrders(Collection $orders): void
+    {
+
+    }
+
     public function getPhone(): Phone
     {
         return $this->phone;

@@ -4,6 +4,7 @@ namespace App\Domain\Cart\Aggregate;
 
 use App\Domain\AggregateRoot;
 use App\Domain\Cart\Event\CartItemAddedEvent;
+use App\Domain\Product\Aggregate\Product;
 use App\Domain\User\Aggregate\User;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
@@ -60,5 +61,10 @@ class Cart extends AggregateRoot
 
         $this->items->offsetSet($itemId, $item);
         $this->raiseEvent(new CartItemAddedEvent($this, $item));
+    }
+
+    public function addProduct(Product $product): void
+    {
+
     }
 }

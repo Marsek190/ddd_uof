@@ -8,11 +8,11 @@ use App\Domain\Cart\CartRelationLoaderInterface;
 
 final class CartRelationLoader implements CartRelationLoaderInterface
 {
-    public function loadProducts(Cart $cart): void
+    public function loadProducts(Cart $cart, array $nested = []): void
     {
     }
 
-    public function loadItems(Cart $cart): void
+    public function loadItems(Cart $cart, array $nested = []): void
     {
     }
 }

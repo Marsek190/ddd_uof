@@ -8,11 +8,11 @@ use App\Domain\Order\OrderRelationLoaderInterface;
 
 final class OrderRelationLoader implements OrderRelationLoaderInterface
 {
-    public function loadProducts(Order $order): void
+    public function loadProducts(Order $order, array $nested = []): void
     {
     }
 
-    public function loadItems(Order $order): void
+    public function loadItems(Order $order, array $nested = []): void
     {
     }
 }

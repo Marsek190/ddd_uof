@@ -7,6 +7,7 @@ use App\Domain\Loyalty\Aggregate\Loyalty;
 use App\Domain\Order\Aggregate\Order;
 use App\Domain\Order\Aggregate\OrderItem;
 use App\Domain\Order\Event\OrderPaidEvent;
+use App\Domain\User\UserRelationLoaderInterface;
 use Illuminate\Support\Collection;
 use Psr\EventDispatcher\EventDispatcherInterface;
 
@@ -23,12 +24,17 @@ final class UpgradeUserLoyaltyLevelHandler
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly EventDispatcherInterface $dispatcher,
+        private readonly UserRelationLoaderInterface $userRelationLoader,
     ) {
     }
 
     public function handle(OrderPaidEvent $event): void
     {
         $user = $event->order->getUser();
+
+        $this->userRelationLoader->loadOrders($user);
+        $this->userRelationLoader->loadLoyalty($user);
+
         $orders = $user->getOrders();
         $loyalty = $user->getLoyalty();
 
@@ -61,8 +67,9 @@ final class UpgradeUserLoyaltyLevelHandler
         $paidOrders = $orders->filter(fn (Order $order): bool => $order->getStatus()->isPaid());
         $totalOrdersPrice = $this->calculateTotalOrdersPrice($paidOrders);
         $discountAmountInPercentage = $loyalty->getDiscountAmountInPercentage();
+        $highestAbilityDiscount = (int)array_slice(array_keys(self::UPGRADE_LEVELS), -1)[0];
 
-        if ($discountAmountInPercentage >= last(self::UPGRADE_LEVELS)) {
+        if ($discountAmountInPercentage >= $highestAbilityDiscount) {
             return false;
         }
 

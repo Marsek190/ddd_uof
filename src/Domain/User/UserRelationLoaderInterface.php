@@ -7,6 +7,19 @@ use App\Domain\User\Aggregate\User;
 
 interface UserRelationLoaderInterface
 {
-    public function loadOrders(User $user): void;
-    public function loadCart(User $user): void;
+    /**
+     * `$this->userRelationLoader->loadOrders($user, [OrderItem::class, Product::class])`
+     *
+     * @param array<class-string> $nested
+     */
+    public function loadOrders(User $user, array $nested = []): void;
+
+    /**
+     * `$this->userRelationLoader->loadCart($user, [CartItem::class, Product::class])`
+     *
+     * @param array<class-string> $nested
+     */
+    public function loadCart(User $user, array $nested = []): void;
+
+    public function loadLoyalty(User $user): void;
 }
